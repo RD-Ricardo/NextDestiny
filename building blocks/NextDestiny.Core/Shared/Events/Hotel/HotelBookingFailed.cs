@@ -1,8 +1,9 @@
 ﻿namespace NextDestiny.Core.Shared.Events.Hotel
 {
-    public class HotelReserveFailure
+    public class HotelBookingFailed
     {
         public Guid OrderId { get; set; }
-        public Guid ReserveId { get; set; }
+
+        public DateTime Timestamp { get; set; }
     }
 }

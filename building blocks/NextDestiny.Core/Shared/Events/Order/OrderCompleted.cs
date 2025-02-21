@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NextDestiny.Core.Shared.Events.Order
+﻿namespace NextDestiny.Core.Shared.Events.Order
 {
-    internal class OrderCompleted
+    public class OrderCompleted
     {
+        public OrderCompleted(Guid orderId)
+        {
+            OrderId = orderId;
+        }
+
+        public Guid OrderId { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

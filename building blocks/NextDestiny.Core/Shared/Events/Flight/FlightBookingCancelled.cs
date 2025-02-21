@@ -1,8 +1,9 @@
 ﻿namespace NextDestiny.Core.Shared.Events.Flight
 {
-    public class FlightFailure
+    public class FlightBookingCancelled
     {
         public Guid OrderId { get; set; }
-        public string Reason { get; set; } = null!;
+
+        public DateTime Timestamp { get; set; }
     }
 }

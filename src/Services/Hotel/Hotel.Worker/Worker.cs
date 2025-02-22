@@ -10,4 +10,12 @@ namespace Hotel.Worker
             throw new NotImplementedException();
         }
     }
+
+    public class WorkerDefinition : ConsumerDefinition<Worker>
+    {
+        public WorkerDefinition()
+        {
+            Endpoint(x => x.Name = "hotel-booking-requested");
+        }
+    }
 }

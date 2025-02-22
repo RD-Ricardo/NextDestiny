@@ -2,6 +2,6 @@
 {
     public interface IBusService
     {
-        Task Publish<T>(T message) where T : class;
+        Task PublishAsync<T>(T message) where T : class;
     }
 }

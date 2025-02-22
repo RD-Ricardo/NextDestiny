@@ -11,7 +11,7 @@ namespace NextDestiny.Core.Amqp.Abstractions
             _bus = bus;
         }
 
-        public async Task Publish<T>(T message) where T : class
+        public async Task PublishAsync<T>(T message) where T : class
         {
             await _bus.Publish(message);
         }

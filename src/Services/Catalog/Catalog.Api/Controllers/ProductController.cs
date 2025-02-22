@@ -27,5 +27,12 @@ namespace Catalog.Api.Controllers
             var result = await _productService.GetProductsAsync(cancellationToken);
             return Ok(result);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProduct(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _productService.GetProductAsync(id, cancellationToken);
+            return Ok(result);
+        }
     }
 }

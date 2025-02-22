@@ -5,6 +5,8 @@ using NextDestiny.Core.Amqp;
 using NextDestiny.Core.Database.MongoDb;
 using Order.Application.Interfaces;
 using Order.Application.Services;
+using Order.Domain.Repositories;
+using Order.Infrastructure.Persistence;
 using Refit;
 
 namespace Order.Infrastructure
@@ -19,11 +21,16 @@ namespace Order.Infrastructure
             
             services.AddAmqpServices(configuration);
 
+            var apiCatalogUri = configuration["ApiCatalogUri"]!;
+
             services
                 .AddRefitClient<ICatalogApi>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["ApiCatalogUri"]!));
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiCatalogUri));
 
             services.AddScoped<IOrderService, OrderService>();
+
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
 
             return services;
         }

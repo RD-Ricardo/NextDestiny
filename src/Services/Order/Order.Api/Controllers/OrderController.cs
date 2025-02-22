@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Order.Application.Dtos;
 using Order.Application.Interfaces;
 
 namespace Order.Api.Controllers
@@ -14,9 +15,9 @@ namespace Order.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrderAsync()
+        public async Task<IActionResult> CreateOrder(OrderCreateDto dto, CancellationToken cancellationToken)
         {
-            await _orderService.CreateOrderAsync();
+            await _orderService.CreateOrderAsync(dto, cancellationToken);
             return Ok();
         }
     }

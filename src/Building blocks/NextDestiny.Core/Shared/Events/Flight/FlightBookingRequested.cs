@@ -8,12 +8,8 @@ namespace NextDestiny.Core.Shared.Events.Flight
 {
     public class FlightBookingRequested
     {
-        public FlightBookingRequested(Guid orderId)
-        {
-            OrderId = orderId;
-        }
-        public Guid OrderId { get; }
-
-        public DateTime Timestamp { get; set; }
+        public Guid OrderId { get; set; }
+        public string CustomerEmail { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     }
 }

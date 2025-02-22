@@ -3,7 +3,6 @@
     public class FlightBookingCompleted
     {
         public Guid OrderId { get; set; }
-
         public DateTime Timestamp { get; set; }
     }
 }

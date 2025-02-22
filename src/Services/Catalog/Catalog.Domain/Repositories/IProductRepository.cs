@@ -6,5 +6,6 @@ namespace Catalog.Domain.Repositories
     {
         Task CreateAsync(Product product, CancellationToken cancellationToken);
         Task<List<Product>> GetAllAsync(CancellationToken cancellationToken);
+        Task<Product> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     }
 }

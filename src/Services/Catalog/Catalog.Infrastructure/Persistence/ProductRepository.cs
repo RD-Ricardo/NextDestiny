@@ -23,5 +23,11 @@ namespace Catalog.Infrastructure.Persistence
             var products = await _productCollection.Find(_ => true).ToListAsync(cancellationToken);
             return products;
         }
+
+        public async Task<Product> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var product = await _productCollection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+            return product;
+        }
     }
 }

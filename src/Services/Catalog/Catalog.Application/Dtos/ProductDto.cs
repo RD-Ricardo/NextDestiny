@@ -23,7 +23,6 @@ namespace Catalog.Application.Dtos
         public Guid Id { get; set; }
         public string City { get; set; } = null!;
         public string Country { get; set; } = null!;
-
         public DateTime CreatedAt { get; set; }
     }
 }

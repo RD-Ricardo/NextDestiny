@@ -34,13 +34,14 @@ namespace Catalog.Application.Services
 
         public async Task<ProductDto> GetProductAsync(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-            //var product = await _productRepository.GetByIdAsync(id, cancellationToken);
-            //if (product == null)
-            //{
-            //    throw new KeyNotFoundException("Product not found");
-            //}
-            //return _mapper.Map<ProductDto>(product);
+            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
+            
+            if (product is null)
+            {
+                throw new KeyNotFoundException("Product not found");
+            }
+            
+            return _mapper.Map<ProductDto>(product);
         }
 
         public async Task<IEnumerable<ProductDto>> GetProductsAsync(CancellationToken cancellationToken)

@@ -12,10 +12,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
-	
+
   <ItemGroup>
-    <ProjectReference Include="..\..\..\building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
-    <ProjectReference Include="..\..\..\Flight\Flight.Infrastructure\Flight.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
     <ProjectReference Include="..\Flight.Application\Flight.Application.csproj" />
+    <ProjectReference Include="..\Flight.Infrastructure\Flight.Infrastructure.csproj" />
   </ItemGroup>
+ 
 </Project>

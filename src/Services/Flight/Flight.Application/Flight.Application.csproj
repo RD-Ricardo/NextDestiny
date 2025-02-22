@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
     <ProjectReference Include="..\..\..\Flight\Flight.Domain\Flight.Domain.csproj" />
+    <ProjectReference Include="..\Flight.Domain\Flight.Domain.csproj" />
   </ItemGroup>
 
 </Project>

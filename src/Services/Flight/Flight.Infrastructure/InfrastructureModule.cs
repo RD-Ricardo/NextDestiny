@@ -3,7 +3,6 @@ using Flight.Domain.Repositories;
 using Flight.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NextDestiny.Core.Amqp;
 using NextDestiny.Core.Database.MongoDb;
 
 namespace Flight.Infrastructure

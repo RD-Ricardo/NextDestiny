@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
+    <ProjectReference Include="..\..\..\Building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
   </ItemGroup>
 
 </Project>

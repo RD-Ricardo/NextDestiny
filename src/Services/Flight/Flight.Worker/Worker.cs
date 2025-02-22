@@ -14,15 +14,19 @@ namespace Flight.Worker
 
         public async Task Consume(ConsumeContext<FlightBookingRequested> context)
         {
-            var message = context.Message;
-
             var scope = _serviceScopeFactory.CreateScope();
 
             var flightService = scope.ServiceProvider.GetRequiredService<IFlightService>();
 
-            await flightService.Booking(message.OrderId);
+            await flightService.Booking(context.Message);
+        }
+    }
 
-            Console.WriteLine($"Chegou mensagem {message.OrderId}");
+    public class WorkerDefinition : ConsumerDefinition<Worker>
+    {
+        public WorkerDefinition()
+        {
+            Endpoint(x => x.Name = "flight-booking-requested");
         }
     }
 }

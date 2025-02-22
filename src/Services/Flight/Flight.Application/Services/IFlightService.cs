@@ -1,7 +1,9 @@
-﻿namespace Flight.Application.Services
+﻿using NextDestiny.Core.Shared.Events.Flight;
+
+namespace Flight.Application.Services
 {
     public interface IFlightService
     {
-        Task Booking(Guid orderId);
+        Task Booking(FlightBookingRequested flightBookingRequested);
     }
 }

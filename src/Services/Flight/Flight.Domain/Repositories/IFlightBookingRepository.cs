@@ -7,5 +7,6 @@ namespace Flight.Domain.Repositories
         Task<FlightBooking> GetbyIdAsync(Guid Id);
         Task<FlightBooking> CreateAsync(FlightBooking flightBooking);
         Task<FlightBooking> UpdateAsync(FlightBooking flightBooking);
+        Task<FlightBooking> GetbyOrderIdAsync(Guid orderId);
     }
 }

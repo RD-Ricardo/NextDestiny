@@ -24,6 +24,11 @@ namespace Flight.Infrastructure.Persistence
             return await _flightBookingCollection.Find(f => f.Id == Id).FirstOrDefaultAsync();
         }
 
+        public async Task<FlightBooking> GetbyOrderIdAsync(Guid orderId)
+        {
+            return await _flightBookingCollection.Find(f => f.OrderId == orderId).FirstOrDefaultAsync();
+        }
+
         public async Task<FlightBooking> UpdateAsync(FlightBooking flightBooking)
         {
             await _flightBookingCollection.ReplaceOneAsync(f => f.Id == flightBooking.Id, flightBooking);

@@ -4,6 +4,7 @@ namespace Flight.Application.Services
 {
     public interface IFlightService
     {
-        Task Booking(FlightBookingRequested flightBookingRequested);
+        Task BookingAsync(FlightBookingRequested flightBookingRequested);
+        Task CancelAsync(FlightBookingCancellationRequested flightBookingCancellationRequested);
     }
 }

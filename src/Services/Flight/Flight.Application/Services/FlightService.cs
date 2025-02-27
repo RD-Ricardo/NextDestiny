@@ -20,7 +20,7 @@ namespace Flight.Application.Services
             _flightBookingRepository = flightBookingRepository;
         }
 
-        public async Task Booking(FlightBookingRequested flightBookingRequested)
+        public async Task BookingAsync(FlightBookingRequested flightBookingRequested)
         {
             var origin = GetOrigin();
 
@@ -66,6 +66,32 @@ namespace Flight.Application.Services
                     Timestamp = DateTime.UtcNow
                 });
             }
+        }
+
+        public async Task CancelAsync(FlightBookingCancellationRequested flightBookingCancellationRequested)
+        {
+            var flightBooking = await _flightBookingRepository.GetbyOrderIdAsync(flightBookingCancellationRequested.OrderId);
+
+            if (flightBooking is null)
+            {
+                return;
+            }
+
+            flightBooking.Status = FlightBookingStatus.Canceled;
+
+            flightBooking.Events.Add(new FlightBookingEvent
+            {
+                Name = "Reserva de voo cancelada",
+                CreatedAt = DateTime.Now
+            });
+
+            await _flightBookingRepository.UpdateAsync(flightBooking);
+
+            await _busService.PublishAsync(new FlightBookingCancelled
+            {
+                OrderId = flightBooking.OrderId,
+                Timestamp = DateTime.UtcNow
+            });
         }
 
         private static FlightBooking TryBooking(FlightBooking flightBooking)
@@ -139,5 +165,7 @@ namespace Flight.Application.Services
             var random = new Random();
             return $"Boeing-{random.Next(1, 10)}";
         }
+
+       
     }
 }

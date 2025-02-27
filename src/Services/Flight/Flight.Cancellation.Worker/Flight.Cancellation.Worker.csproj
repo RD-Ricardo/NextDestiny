@@ -16,5 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
+    <ProjectReference Include="..\Flight.Application\Flight.Application.csproj" />
+    <ProjectReference Include="..\Flight.Infrastructure\Flight.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

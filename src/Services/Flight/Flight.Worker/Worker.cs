@@ -16,9 +16,20 @@ namespace Flight.Worker
         {
             var scope = _serviceScopeFactory.CreateScope();
 
-            var flightService = scope.ServiceProvider.GetRequiredService<IFlightService>();
+            var loggger = scope.ServiceProvider.GetRequiredService<ILogger<Worker>>();
 
-            await flightService.Booking(context.Message);
+            try
+            {
+                var flightService = scope.ServiceProvider.GetRequiredService<IFlightService>();
+
+                await flightService.BookingAsync(context.Message);
+
+                await context.ConsumeCompleted;
+            }
+            catch (Exception ex)
+            {
+                loggger.LogError(ex, "Error on booking flight");
+            }
         }
     }
 

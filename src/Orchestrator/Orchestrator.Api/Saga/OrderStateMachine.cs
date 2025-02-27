@@ -3,6 +3,7 @@ using NextDestiny.Core.Shared.Events.Flight;
 using NextDestiny.Core.Shared.Events.Hotel;
 using NextDestiny.Core.Shared.Events.Order;
 using NextDestiny.Core.Shared.Events.Payment;
+using Orchestrator.Api.Service;
 
 namespace Orchestrator.Api.Saga
 {
@@ -22,15 +23,17 @@ namespace Orchestrator.Api.Saga
         public Event<HotelBookingFailed> HotelBookingFailed { get; private set; } = default!;
         public Event<PaymentProcessed> PaymentSucces { get; private set; } = default!;
         public Event<PaymentFailed> PaymentFailed { get; private set; } = default!;
-        
+
         // Compensation
         public Event<FlightBookingCancelled> FlightBookingCancelled { get; private set; } = default!;
         public Event<HotelBookingCancelled> HotelBookingCancelled { get; private set; } = default!;
 
-        public OrderStateMachine()
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+
+        public OrderStateMachine(IServiceScopeFactory serviceScopeFactory)
         {
             InstanceState(x => x.CurrentState);
-            
+
             Event(() => OrderSubmitted, x => x.CorrelateById(context => context.Message.OrderId));
             Event(() => FlightBookingCompleted, x => x.CorrelateById(context => context.Message.OrderId));
             Event(() => FlightBookingFailed, x => x.CorrelateById(context => context.Message.OrderId));
@@ -46,17 +49,23 @@ namespace Orchestrator.Api.Saga
                       .Then(context =>
                       {
                           context.Saga.OrderId = context.Message.OrderId;
-                          Console.WriteLine($"Teste inicializar");
+                          Console.WriteLine($"Pedido enviado");
+
+                          TrackingMessage(context.Message.OrderId, "Pedido enviado");
                       })
                     .TransitionTo(Submitted)
-                    .Publish(context => new FlightBookingRequested(context.Saga.OrderId))
+                    .Publish(context => new FlightBookingRequested
+                    {
+                        OrderId = context.Message.OrderId,
+                        CustomerEmail = context.Message.CustomerEmail
+                    })
             );
             //// Reserva de voo bem-sucedida
             During(Submitted,
                 When(FlightBookingCompleted)
                     .Then(context =>
                     {
-                        Console.WriteLine("Reserva de voo bem-sucedida");
+                        TrackingMessage(context.Message.OrderId, "Reserva de voo bem-sucedida");
                     })
                     .TransitionTo(FlightBooked)
                     .Publish(context => new HotelBookingRequested(context.Saga.OrderId)),
@@ -70,12 +79,18 @@ namespace Orchestrator.Api.Saga
             //// Reserva de hotel bem-sucedida
             During(FlightBooked,
                 When(HotelBookingCompleted)
-                    .Then(context => context.Saga.Timestamp = context.Message.Timestamp)
+                    .Then(context =>
+                    {
+                        TrackingMessage(context.Message.OrderId, "Reserva de hotel bem-sucedida");
+                    })
                     .TransitionTo(HotelBooked)
                     .Publish(context => new PaymentRequest(context.Saga.OrderId)),
 
                 When(HotelBookingFailed)
-                    .Then(context => context.Saga.Timestamp = context.Message.Timestamp)
+                    .Then(context =>
+                    {
+                        TrackingMessage(context.Message.OrderId, "Falha na reserva do hotel");
+                    })
                     .TransitionTo(Failed)
                     .Publish(context => new FlightBookingCancellationRequested(context.Saga.OrderId)) // Rollback da reserva do voo
             );
@@ -83,12 +98,18 @@ namespace Orchestrator.Api.Saga
             //// Pagamento processado com sucesso
             During(HotelBooked,
                 When(PaymentSucces)
-                    .Then(context => context.Saga.Timestamp = context.Message.Timestamp)
+                    .Then(context =>
+                    {
+                        TrackingMessage(context.Message.OrderId, "Pagamento processado com sucesso");
+                    })
                     .TransitionTo(Completed)
                     .Publish(context => new OrderCompleted(context.Saga.OrderId)),
 
                 When(PaymentFailed)
-                    .Then(context => context.Saga.Timestamp = context.Message.Timestamp)
+                    .Then(context =>
+                    {
+                        TrackingMessage(context.Message.OrderId, "Falha no pagamento");
+                    })
                     .TransitionTo(Failed)
                     .Publish(context => new HotelBookingCancellationRequested(context.Saga.OrderId)) // Rollback do hotel
                     .Publish(context => new FlightBookingCancellationRequested(context.Saga.OrderId)) // Rollback do voo
@@ -102,14 +123,33 @@ namespace Orchestrator.Api.Saga
                 When(HotelBookingCancelled)
                     .Then(context => Console.WriteLine($"Reserva de hotel cancelada para o pedido {context.Message.OrderId}"))
             );
+
+            _serviceScopeFactory = serviceScopeFactory;
         }
+
+        private void TrackingMessage(Guid orderId, string message)
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var _logger = scope.ServiceProvider.GetRequiredService<ILogger<OrderStateMachine>>();
+                _logger.LogInformation($"Pedido {orderId}: {message}");
+
+                var trackingService = scope.ServiceProvider.GetRequiredService<ITrackingService>();
+
+                trackingService.SendTrackingEventAsync(orderId, message);
+            }
+        }
+
     }
 
+
+
     public class OrderState : SagaStateMachineInstance
-    {
-        public Guid CorrelationId { get; set; }
-        public string CurrentState { get; set; }
-        public Guid OrderId { get; set; }
-        public DateTime Timestamp { get; set; }
-    }
+        {
+            public Guid CorrelationId { get; set; }
+            public string CurrentState { get; set; }
+            public Guid OrderId { get; set; }
+            public DateTime Timestamp { get; set; }
+        }
+    
 }

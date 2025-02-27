@@ -1,5 +1,7 @@
 using MassTransit;
+using Orchestrator.Api.Hubs;
 using Orchestrator.Api.Saga;
+using Orchestrator.Api.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,7 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddScoped<ITrackingService, TrackingService>();
 
 var app = builder.Build();
 
@@ -42,5 +45,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<TrackingEventHub>("/tracking");
 
 app.Run();

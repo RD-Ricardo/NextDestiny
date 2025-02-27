@@ -4,5 +4,7 @@
     {
         public Guid OrderId { get; set; }
         public DateTime Timestamp { get; set; }
+
+        public string Customer { get; set; }
     }
 }

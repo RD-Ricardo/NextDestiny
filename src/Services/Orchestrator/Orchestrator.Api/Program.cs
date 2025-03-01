@@ -30,6 +30,8 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddSignalR();
+
 builder.Services.AddScoped<ITrackingService, TrackingService>();
 
 var app = builder.Build();

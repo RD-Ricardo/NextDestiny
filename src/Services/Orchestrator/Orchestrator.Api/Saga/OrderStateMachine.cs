@@ -46,12 +46,12 @@ namespace Orchestrator.Api.Saga
 
             Initially(
                 When(OrderSubmitted)
-                      .Then(context =>
+                      .Then(async context =>
                       {
                           context.Saga.OrderId = context.Message.OrderId;
                           Console.WriteLine($"Pedido enviado");
-
-                          TrackingMessage(context.Message.OrderId, "Pedido enviado");
+                          await CreateGroup(context.Message.OrderId);
+                          await TrackingMessage(context.Message.OrderId, "Pedido enviado");
                       })
                     .TransitionTo(Submitted)
                     .Publish(context => new FlightBookingRequested
@@ -63,9 +63,9 @@ namespace Orchestrator.Api.Saga
             //// Reserva de voo bem-sucedida
             During(Submitted,
                 When(FlightBookingCompleted)
-                    .Then(context =>
+                    .Then(async context =>
                     {
-                        TrackingMessage(context.Message.OrderId, "Reserva de voo bem-sucedida");
+                        await TrackingMessage(context.Message.OrderId, "Reserva de voo bem-sucedida");
                     })
                     .TransitionTo(FlightBooked)
                     .Publish(context => new HotelBookingRequested(context.Saga.OrderId)),
@@ -79,17 +79,17 @@ namespace Orchestrator.Api.Saga
             //// Reserva de hotel bem-sucedida
             During(FlightBooked,
                 When(HotelBookingCompleted)
-                    .Then(context =>
+                    .Then(async context =>
                     {
-                        TrackingMessage(context.Message.OrderId, "Reserva de hotel bem-sucedida");
+                        await TrackingMessage(context.Message.OrderId, "Reserva de hotel bem-sucedida");
                     })
                     .TransitionTo(HotelBooked)
                     .Publish(context => new PaymentRequest(context.Saga.OrderId)),
 
                 When(HotelBookingFailed)
-                    .Then(context =>
+                    .Then(async context =>
                     {
-                        TrackingMessage(context.Message.OrderId, "Falha na reserva do hotel");
+                        await TrackingMessage(context.Message.OrderId, "Falha na reserva do hotel");
                     })
                     .TransitionTo(Failed)
                     .Publish(context => new FlightBookingCancellationRequested(context.Saga.OrderId)) // Rollback da reserva do voo
@@ -98,17 +98,17 @@ namespace Orchestrator.Api.Saga
             //// Pagamento processado com sucesso
             During(HotelBooked,
                 When(PaymentSucces)
-                    .Then(context =>
+                    .Then(async context =>
                     {
-                        TrackingMessage(context.Message.OrderId, "Pagamento processado com sucesso");
+                        await TrackingMessage(context.Message.OrderId, "Pagamento processado com sucesso");
                     })
                     .TransitionTo(Completed)
                     .Publish(context => new OrderCompleted(context.Saga.OrderId)),
 
                 When(PaymentFailed)
-                    .Then(context =>
+                    .Then(async context =>
                     {
-                        TrackingMessage(context.Message.OrderId, "Falha no pagamento");
+                       await TrackingMessage(context.Message.OrderId, "Falha no pagamento");
                     })
                     .TransitionTo(Failed)
                     .Publish(context => new HotelBookingCancellationRequested(context.Saga.OrderId)) // Rollback do hotel
@@ -118,16 +118,24 @@ namespace Orchestrator.Api.Saga
             //// Compensação (Rollback)
             During(Failed,
                 When(FlightBookingCancelled)
-                    .Then(context => Console.WriteLine($"Reserva de voo cancelada para o pedido {context.Message.OrderId}")),
+                    .Then(async context => 
+                    {
+                        Console.WriteLine($"Reserva de voo cancelada para o pedido {context.Message.OrderId}");
+                        await TrackingMessage(context.Message.OrderId, $"Reserva de voo cancelada para o pedido {context.Message.OrderId}");
+                    }),
 
                 When(HotelBookingCancelled)
-                    .Then(context => Console.WriteLine($"Reserva de hotel cancelada para o pedido {context.Message.OrderId}"))
+                    .Then(async context => 
+                    {
+                        Console.WriteLine($"Reserva de hotel cancelada para o pedido {context.Message.OrderId}");
+                        await TrackingMessage(context.Message.OrderId, $"Reserva de hotel cancelada para o pedido {context.Message.OrderId}");
+                    })
             );
 
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        private void TrackingMessage(Guid orderId, string message)
+        private async Task TrackingMessage(Guid orderId, string message)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
@@ -136,7 +144,17 @@ namespace Orchestrator.Api.Saga
 
                 var trackingService = scope.ServiceProvider.GetRequiredService<ITrackingService>();
 
-                trackingService.SendTrackingEventAsync(orderId, message);
+                await trackingService.SendTrackingEventAsync(orderId, message);
+            }
+        }
+
+
+        private async Task CreateGroup(Guid orderId)
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var trackingService = scope.ServiceProvider.GetRequiredService<ITrackingService>();
+                await trackingService.CreateGroupAsync(orderId);
             }
         }
 

@@ -4,10 +4,10 @@ using NextDestiny.Core.Shared.Events.Flight;
 
 namespace Flight.Worker
 {
-    public class Worker : IConsumer<FlightBookingRequested>
+    public class FlightBookingWorker : IConsumer<FlightBookingRequested>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        public Worker(IServiceScopeFactory serviceScopeFactory)
+        public FlightBookingWorker(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
@@ -16,7 +16,7 @@ namespace Flight.Worker
         {
             var scope = _serviceScopeFactory.CreateScope();
 
-            var loggger = scope.ServiceProvider.GetRequiredService<ILogger<Worker>>();
+            var loggger = scope.ServiceProvider.GetRequiredService<ILogger<FlightBookingWorker>>();
 
             try
             {
@@ -33,7 +33,7 @@ namespace Flight.Worker
         }
     }
 
-    public class WorkerDefinition : ConsumerDefinition<Worker>
+    public class WorkerDefinition : ConsumerDefinition<FlightBookingWorker>
     {
         public WorkerDefinition()
         {

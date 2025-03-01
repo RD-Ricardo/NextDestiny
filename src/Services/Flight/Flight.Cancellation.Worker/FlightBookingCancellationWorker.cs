@@ -5,11 +5,11 @@ using NextDestiny.Core.Shared.Events.Flight;
 
 namespace Flight.Cancellation.Worker
 {
-    public class Worker : IConsumer<FlightBookingCancellationRequested>
+    public class FlightBookingCancellationWorker : IConsumer<FlightBookingCancellationRequested>
     {
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        public Worker(IServiceScopeFactory serviceScopeFactory)
+        public FlightBookingCancellationWorker(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
@@ -18,7 +18,7 @@ namespace Flight.Cancellation.Worker
         {
             var scope = _serviceScopeFactory.CreateScope();
 
-            var loggger = scope.ServiceProvider.GetRequiredService<ILogger<Worker>>();
+            var loggger = scope.ServiceProvider.GetRequiredService<ILogger<FlightBookingCancellationWorker>>();
 
             try
             {

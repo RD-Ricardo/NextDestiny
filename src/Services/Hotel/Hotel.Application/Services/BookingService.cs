@@ -32,7 +32,7 @@ namespace Hotel.Application.Services
 
             var totalPrice = pricePerNight * (checkInAt - checkOutAt).Days;
 
-            var status = _random.Next(0, 1);
+            var status = _random.Next(0, 2);
 
             var orderId = hotelBookingRequested.OrderId;
 

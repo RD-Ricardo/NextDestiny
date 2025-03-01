@@ -5,7 +5,7 @@ using NextDestiny.Core.Amqp;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddInfra(builder.Configuration);
-builder.Services.AddAmqpServices(builder.Configuration, typeof(Worker));
+builder.Services.AddAmqpServices(builder.Configuration, typeof(HotelBookingCancellationWorker));
 
 var host = builder.Build();
 host.Run();

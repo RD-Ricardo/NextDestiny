@@ -4,11 +4,11 @@ using NextDestiny.Core.Shared.Events.Hotel;
 
 namespace Hotel.Worker
 {
-    public class Worker : IConsumer<HotelBookingRequested>
+    public class HotelWorker : IConsumer<HotelBookingRequested>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public Worker(IServiceScopeFactory serviceScopeFactory)
+        public HotelWorker(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
@@ -17,7 +17,7 @@ namespace Hotel.Worker
         {
             var scope = _serviceScopeFactory.CreateScope();
 
-            var loggger = scope.ServiceProvider.GetRequiredService<ILogger<Worker>>();
+            var loggger = scope.ServiceProvider.GetRequiredService<ILogger<HotelWorker>>();
 
             try
             {
@@ -34,7 +34,7 @@ namespace Hotel.Worker
         }
     }
 
-    public class WorkerDefinition : ConsumerDefinition<Worker>
+    public class WorkerDefinition : ConsumerDefinition<HotelWorker>
     {
         public WorkerDefinition()
         {

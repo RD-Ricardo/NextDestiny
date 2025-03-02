@@ -1,8 +1,10 @@
 
 using Catalog.Infrastructure;
+using NextDestiny.Core.SecretManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddSecretManager("next-destiny-sc");
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

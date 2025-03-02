@@ -26,7 +26,7 @@ namespace NextDestiny.Core.SecretManager
 
             GetSecretValueResponse response;
 
-            using var client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(_region));
+            using var client = new AmazonSecretsManagerClient(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"), Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"), RegionEndpoint.GetBySystemName(_region));
 
             try
             {

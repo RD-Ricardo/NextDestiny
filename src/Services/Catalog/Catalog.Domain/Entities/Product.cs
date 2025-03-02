@@ -1,5 +1,6 @@
 ﻿using Catalog.Domain.Enums;
 using Catalog.Domain.ValueObjects;
+using MongoDB.Bson.Serialization.Attributes;
 using NextDestiny.Core.DomainObjects;
 
 namespace Catalog.Domain.Entities
@@ -14,6 +15,8 @@ namespace Catalog.Domain.Entities
         public IList<Feedback> Feedbacks { get; set; } = [];
         public Status Status { get; set; }
         public Location Location { get; set; } = null!;
+
+        [BsonRepresentation(MongoDB.Bson.BsonType.String)]
         public Guid HotelId { get; set; }
     }
 }

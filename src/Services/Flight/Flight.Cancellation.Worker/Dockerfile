@@ -1,27 +1,28 @@
-# Acesse https://aka.ms/customizecontainer para saber como personalizar seu contêiner de depuração e como o Visual Studio usa este Dockerfile para criar suas imagens para uma depuração mais rápida.
-
-# Esta fase é usada durante a execução no VS no modo rápido (Padrão para a configuração de Depuração)
 FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 
 
-# Esta fase é usada para compilar o projeto de serviço
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Flight/Flight.Cancellation.Worker/Flight.Cancellation.Worker.csproj", "src/Flight/Flight.Cancellation.Worker/"]
-RUN dotnet restore "./src/Flight/Flight.Cancellation.Worker/Flight.Cancellation.Worker.csproj"
-COPY . .
-WORKDIR "/src/src/Flight/Flight.Cancellation.Worker"
-RUN dotnet build "./Flight.Cancellation.Worker.csproj" -c $BUILD_CONFIGURATION -o /app/build
+COPY ["src/Services/Flight/Flight.Cancellation.Worker/Flight.Cancellation.Worker.csproj", "Services/Flight/Flight.Cancellation.Worker/"]
+COPY ["src/Building blocks/NextDestiny.Core/NextDestiny.Core.csproj", "Building blocks/NextDestiny.Core/"]
+COPY ["src/Services/Flight/Flight.Application/Flight.Application.csproj", "Services/Flight/Flight.Application/"]
+COPY ["src/Services/Flight/Flight.Domain/Flight.Domain.csproj", "Services/Flight/Flight.Domain/"]
+COPY ["src/Services/Flight/Flight.Infrastructure/Flight.Infrastructure.csproj", "Services/Flight/Flight.Infrastructure/"]
 
-# Esta fase é usada para publicar o projeto de serviço a ser copiado para a fase final
+RUN dotnet restore "Services/Flight/Flight.Cancellation.Worker/Flight.Cancellation.Worker.csproj"
+COPY src/ .
+
+WORKDIR /src/Services/Flight/Flight.Cancellation.Worker
+RUN dotnet build "Flight.Cancellation.Worker.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Flight.Cancellation.Worker.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+WORKDIR /src/Services/Flight/Flight.Cancellation.Worker
+RUN dotnet publish "Flight.Cancellation.Worker.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Esta fase é usada na produção ou quando executada no VS no modo normal (padrão quando não está usando a configuração de Depuração)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

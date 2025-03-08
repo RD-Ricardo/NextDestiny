@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Flight.Cancellation.Worker-16f9a21a-79f8-4ab0-b64c-57c30ef29c19</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
+    <ProjectReference Include="..\..\..\Building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
     <ProjectReference Include="..\Flight.Application\Flight.Application.csproj" />
     <ProjectReference Include="..\Flight.Infrastructure\Flight.Infrastructure.csproj" />
   </ItemGroup>

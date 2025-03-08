@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Hotel.Cancellation.Worker-aa2ac39c-f870-4a82-9a1b-a297f47320ef</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
+    <ProjectReference Include="..\..\..\Building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
     <ProjectReference Include="..\Hotel.Application\Hotel.Application.csproj" />
     <ProjectReference Include="..\Hotel.Infastructure\Hotel.Infastructure.csproj" />
   </ItemGroup>

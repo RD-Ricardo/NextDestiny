@@ -4,7 +4,7 @@ using NextDestiny.Core.SecretManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddSecretManager("next-destiny-sc");
+builder.Configuration.AddSecretManager();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

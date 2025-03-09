@@ -16,5 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
+    <ProjectReference Include="..\Payment.Application\Payment.Application.csproj" />
   </ItemGroup>
 </Project>

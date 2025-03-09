@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Building blocks\NextDestiny.Core\NextDestiny.Core.csproj" />
+  </ItemGroup>
+
 </Project>

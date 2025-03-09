@@ -29,7 +29,7 @@ namespace Order.Application.Services
             _catalogApi = catalogApi;
         }
 
-        public async Task CreateOrderAsync(OrderCreateDto request, CancellationToken cancellationToken)
+        public async Task<OrderResponseDto> CreateOrderAsync(OrderCreateDto request, CancellationToken cancellationToken)
         {
            var order = await MapOrder(request, cancellationToken);
 
@@ -45,6 +45,29 @@ namespace Order.Application.Services
             
             await _orderRepository.CreateAsync(order, cancellationToken);
 
+            await _busService.PublishAsync(new OrderSubmitted
+            {
+                OrderId = order.Id,
+                CustomerId = order.Customer.Id,
+                Total = order.Items.Sum(x => x.Price * x.Quantity),
+                ProductId = order.Items.FirstOrDefault()?.ProductId ?? Guid.Empty
+            });
+
+            return new OrderResponseDto
+            {
+                Id = order.Id,
+            };
+        }
+
+        public async Task RetryAsync(Guid orderId, CancellationToken cancellationToken)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
+            
+            if (order is null)
+            {
+                throw new Exception("Pedido não encontrado");
+            }
+            
             await _busService.PublishAsync(new OrderSubmitted
             {
                 OrderId = order.Id,

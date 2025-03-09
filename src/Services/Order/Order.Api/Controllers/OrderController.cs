@@ -17,7 +17,14 @@ namespace Order.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder(OrderCreateDto dto, CancellationToken cancellationToken)
         {
-            await _orderService.CreateOrderAsync(dto, cancellationToken);
+            var result = await _orderService.CreateOrderAsync(dto, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPut("{orderId}/retry")]
+        public async Task<IActionResult> Retry(Guid orderId, CancellationToken cancellationToken)
+        {
+            await _orderService.RetryAsync(orderId, cancellationToken);
             return Ok();
         }
     }

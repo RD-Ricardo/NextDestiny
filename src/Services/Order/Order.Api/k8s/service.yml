@@ -4,7 +4,7 @@ metadata:
   name: order-api-service
 spec:
   selector:
-    app: catalog-api
+    app: order-api
   ports:
     - name: http      
       protocol: TCP

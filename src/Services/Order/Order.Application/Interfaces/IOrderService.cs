@@ -5,6 +5,7 @@ namespace Order.Application.Interfaces
 {
     public interface IOrderService
     {
-        Task CreateOrderAsync(OrderCreateDto request, CancellationToken cancellationToken);
+        Task<OrderResponseDto> CreateOrderAsync(OrderCreateDto request, CancellationToken cancellationToken);
+        Task RetryAsync(Guid orderId, CancellationToken cancellationToken);
     }
 }

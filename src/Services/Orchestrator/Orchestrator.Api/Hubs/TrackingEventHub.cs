@@ -7,13 +7,12 @@ namespace Orchestrator.Api.Hubs
         public override async Task OnConnectedAsync()
         {
             var orderId = Context.GetHttpContext().Request.Query["orderId"];
-            await Groups.AddToGroupAsync(Context.ConnectionId, orderId);
+            Console.Write(orderId);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var orderId = Context.GetHttpContext().Request.Query["orderId"];
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, orderId);
         }
     }
 }

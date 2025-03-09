@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System.Threading;
+using MassTransit;
 using NextDestiny.Core.Shared.Events.Flight;
 using NextDestiny.Core.Shared.Events.Hotel;
 using NextDestiny.Core.Shared.Events.Order;
@@ -50,7 +51,7 @@ namespace Orchestrator.Api.Saga
                       {
                           context.Saga.OrderId = context.Message.OrderId;
                           Console.WriteLine($"Pedido enviado");
-                          await CreateGroup(context.Message.OrderId);
+                          //await CreateGroup(context.Message.OrderId);
                           await TrackingMessage(context.Message.OrderId, "Pedido enviado");
                       })
                     .TransitionTo(Submitted)
@@ -120,15 +121,13 @@ namespace Orchestrator.Api.Saga
                 When(FlightBookingCancelled)
                     .Then(async context => 
                     {
-                        Console.WriteLine($"Reserva de voo cancelada para o pedido {context.Message.OrderId}");
-                        await TrackingMessage(context.Message.OrderId, $"Reserva de voo cancelada para o pedido {context.Message.OrderId}");
+                        await TrackingMessage(context.Message.OrderId, $"↩️ Reserva de voo cancelada para o pedido {context.Message.OrderId}");
                     }),
 
                 When(HotelBookingCancelled)
                     .Then(async context => 
                     {
-                        Console.WriteLine($"Reserva de hotel cancelada para o pedido {context.Message.OrderId}");
-                        await TrackingMessage(context.Message.OrderId, $"Reserva de hotel cancelada para o pedido {context.Message.OrderId}");
+                        await TrackingMessage(context.Message.OrderId, $"↩️ Reserva de hotel cancelada para o pedido {context.Message.OrderId}");
                     })
             );
 
@@ -144,6 +143,7 @@ namespace Orchestrator.Api.Saga
 
                 var trackingService = scope.ServiceProvider.GetRequiredService<ITrackingService>();
 
+                Thread.Sleep(500);
                 await trackingService.SendTrackingEventAsync(orderId, message);
             }
         }

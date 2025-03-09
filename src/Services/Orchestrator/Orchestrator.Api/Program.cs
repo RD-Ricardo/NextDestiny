@@ -1,10 +1,12 @@
 using MassTransit;
+using NextDestiny.Core.SecretManager;
 using Orchestrator.Api.Hubs;
 using Orchestrator.Api.Saga;
 using Orchestrator.Api.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddSecretManager();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -30,9 +32,24 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-builder.Services.AddSignalR();
-
 builder.Services.AddScoped<ITrackingService, TrackingService>();
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyHeader()
+               .AllowAnyMethod()
+               .SetIsOriginAllowed(_ => true)
+               .AllowCredentials();
+    });
+});
+
+builder.Services.AddSignalR(x =>
+{
+    x.EnableDetailedErrors = true;
+});
 
 var app = builder.Build();
 
@@ -44,7 +61,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseCors("AllowAll");
 
 app.MapControllers();
 

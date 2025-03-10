@@ -1,9 +1,11 @@
 using NextDestiny.Core.SecretManager;
+using NextDestiny.Core.WebApi.Extensions;
 using Order.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddSecretManager();
+builder.AddObservability("order-api");
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

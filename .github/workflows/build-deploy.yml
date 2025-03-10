@@ -1,0 +1,62 @@
+name: Build and Deploy
+
+on:
+  workflow_call:
+    inputs:
+      dockerfille:
+        required: true
+        type: string
+      tags:
+        required: true
+        type: string
+      set-image-k8s:
+        required: true
+        type: string
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: next-destiny-dev
+  GKE_ZONE: us-central1-c
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.2.2
+
+    - name: Docker Login
+      uses: docker/login-action@v3.3.0
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v6.15.0
+      with:
+        push: true
+        tags: tags
+        file: dockerfille
+    
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2.1.4
+      with:
+        credentials_json: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ env.PROJECT_ID }}
+
+    - name: Set up GKE credentials
+      uses: google-github-actions/get-gke-credentials@v0
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+
+    - name: Get GKE Credentials
+      uses: google-github-actions/get-gke-credentials@v2.3.3
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        project_id:  ${{ env.PROJECT_ID }}
+        location: ${{ env.GKE_ZONE }}
+        namespace: next-destiny
+
+    - name: Set image in Kubernetes Deployment
+      run: set-image-k8s
+        

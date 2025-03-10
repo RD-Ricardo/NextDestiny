@@ -31,10 +31,11 @@ jobs:
         tags: rdricardo/next-destiny:${{ github.sha }}
         file: src/Services/Catalog/Catalog.Api/Dockerfile
     
-    - id: 'auth'
-      uses: 'google-github-actions/auth@v0'
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2.1.4
       with:
-        credentials_json: '${{ secrets.GKE_SA_KEY }}'
+        credentials_json: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ env.PROJECT_ID }}
 
     - name: Set up GKE credentials
       uses: google-github-actions/get-gke-credentials@v0

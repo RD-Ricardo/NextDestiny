@@ -50,3 +50,8 @@ jobs:
         project_id:  ${{ env.PROJECT_ID }}
         location: ${{ env.GKE_ZONE }}
         namespace: next-destiny
+
+    - name: Set image in Kubernetes Deployment
+      run: |
+        kubectl set image deployment/catalog-api-deployment catalog-api=rdricardo/next-destiny:${{ github.sha }}
+        kubectl rollout restart deployment/catalog-api-deployment

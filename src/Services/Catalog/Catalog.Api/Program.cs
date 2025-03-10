@@ -1,10 +1,10 @@
-
 using Catalog.Infrastructure;
-using NextDestiny.Core.SecretManager;
+using NextDestiny.Core.WebApi.Extensions;
+using NextDestiny.Core.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddSecretManager();
+builder.AddObservability("catalog-api");
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -27,6 +27,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<LogMiddleware>();
 
 app.UseCors("CorsPolicy");
 

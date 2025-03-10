@@ -42,5 +42,10 @@ jobs:
       with:
         cluster_name: ${{ env.GKE_CLUSTER }}
         location: ${{ env.GKE_ZONE }}
-     
-    
+
+    - name: Get GKE Credentials
+      uses: google-github-actions/get-gke-credentials@v2.3.3
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        project_id:  ${{ env.PROJECT_ID }}
+        namespace: next-destiny

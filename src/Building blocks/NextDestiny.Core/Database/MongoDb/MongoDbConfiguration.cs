@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Elastic.Apm.MongoDb;
+using MongoDB.Driver.Core.Events;
 
 namespace NextDestiny.Core.Database.MongoDb
 {
@@ -14,7 +16,12 @@ namespace NextDestiny.Core.Database.MongoDb
             services.AddSingleton<IMongoClient>(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-                return new MongoClient(settings.ConnectionString);
+
+                var clientSettings = MongoClientSettings.FromUrl(new MongoUrl(settings.ConnectionString));
+
+                clientSettings.ClusterConfigurator = builder => builder.Subscribe(new MongoDbEventSubscriber());
+              
+                return new MongoClient(clientSettings);
             });
 
 

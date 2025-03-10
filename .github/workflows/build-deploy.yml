@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Exibir variável
-      run: echo "${{ github.event.inputs.dockerfille }}"
+      run: echo "${{ inputs.dockerfille }}"
 
     - name: Checkout
       uses: actions/checkout@v4.2.2
@@ -37,8 +37,8 @@ jobs:
       uses: docker/build-push-action@v6.15.0
       with:
         push: true
-        tags: ${{ github.event.inputs.tags }}
-        file: ${{ github.event.inputs.dockerfille }}
+        tags: ${{ inputs.tags }}
+        file: ${{ inputs.dockerfille }}
     
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2.1.4

@@ -15,6 +15,7 @@ jobs:
   deploy:
     name: deploy-catalog 
     uses: ./.github/workflows/build-deploy.yml
+    secrets: inherit
     with:
       dockerfille: src/Services/Catalog/Catalog.Api/Dockerfile
       tags: rdricardo/next-destiny:catalog-${{ github.sha }}

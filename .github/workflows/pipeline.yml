@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: next-destiny-dev
+  GKE_ZONE: us-central1-c
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,5 +29,17 @@ jobs:
       with:
         push: true
         tags: rdricardo/next-destiny:${{ github.sha }}
-        file: src/Services/Catalog/Catalog.Api/Dockerfile  
+        file: src/Services/Catalog/Catalog.Api/Dockerfile
+    
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GKE_SA_KEY }}'
+
+    - name: Set up GKE credentials
+      uses: google-github-actions/get-gke-credentials@v0
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+     
     

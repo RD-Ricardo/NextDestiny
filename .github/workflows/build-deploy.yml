@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Exibir variável
-      run: echo dockerfille
+      run: echo ${{ github.event.inputs.dockerfille }}
 
     - name: Checkout
       uses: actions/checkout@v4.2.2
@@ -37,8 +37,8 @@ jobs:
       uses: docker/build-push-action@v6.15.0
       with:
         push: true
-        tags: tags
-        file: dockerfille
+        tags: ${{ github.event.inputs.tags }}
+        file: ${{ github.event.inputs.dockerfille }}
     
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2.1.4
@@ -61,5 +61,5 @@ jobs:
         namespace: next-destiny
 
     - name: Set image in Kubernetes Deployment
-      run: set-image-k8s
+      run: ${{ github.event.inputs.set-image-k8s }}
         

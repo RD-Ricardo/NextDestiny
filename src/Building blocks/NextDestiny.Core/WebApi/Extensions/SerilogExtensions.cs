@@ -30,13 +30,13 @@ namespace NextDestiny.Core.WebApi.Extensions
                 .Enrich.WithElasticApmCorrelationInfo()
                 .Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))
                 .Filter.ByExcluding(z => z.MessageTemplate.Text.Contains("specific error"))
-                .WriteTo.Async(writeTo => writeTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticsearchSettings:uri"]))
+                .WriteTo.Async(writeTo => writeTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticSearchSettings:Uri"]))
                 {
                     TypeName = null,
                     AutoRegisterTemplate = true,
                     IndexFormat = "indexlogs",
                     BatchAction = ElasticOpType.Create,
-                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], configuration["ElasticsearchSettings:password"])
+                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticSearchSettings:Username"], configuration["ElasticSearchSettings:Password"])
                 }))
                 .WriteTo.Async(writeTo => writeTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"))
                 .WriteTo.Debug()

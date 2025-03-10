@@ -14,6 +14,7 @@ jobs:
       dockerfille: src/Services/Catalog/Catalog.Api/Dockerfile
       tags: rdricardo/next-destiny:catalog-${{ github.sha }}
       deployment-name: catalog-api-deployment
+      label-name: catalog-api
   
   deploy-order:
     uses: ./.github/workflows/build-deploy.yml
@@ -22,3 +23,4 @@ jobs:
       dockerfille: src/Services/Order/Order.Api/Dockerfile
       tags: rdricardo/next-destiny:order-${{ github.sha }}
       deployment-name: order-api-deployment
+      label-name: order-api

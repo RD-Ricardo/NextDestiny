@@ -12,11 +12,11 @@ on:
 #   GKE_ZONE: us-central1-c
 
 jobs:
-  use-template:
+  deploy:
     name: deploy-catalog 
-    uses: RD-Ricardo/NextDestiny/.github/workflows/build-deploy.yml@main
+    uses: ./.github/workflows/build-deploy.yml
     with:
       dockerfille: src/Services/Catalog/Catalog.Api/Dockerfile
-      tags: rdricardo/next-destiny:${{ github.sha }}
+      tags: rdricardo/next-destiny:catalog-${{ github.sha }}
       set-image-k8s:  kubectl set image deployment/catalog-api-deployment catalog-api=rdricardo/next-destiny:${{ github.sha }}
                       kubectl rollout restart deployment/catalog-api-deployment

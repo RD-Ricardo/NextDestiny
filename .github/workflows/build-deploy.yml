@@ -55,5 +55,5 @@ jobs:
         namespace: next-destiny
 
     - name: Set image in Kubernetes Deployment
-      run: "| ${{ github.event.inputs.set-image-k8s }}"
+      run: "${{ github.event.inputs.set-image-k8s }}"
         

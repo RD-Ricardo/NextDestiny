@@ -48,4 +48,5 @@ jobs:
       with:
         cluster_name: ${{ env.GKE_CLUSTER }}
         project_id:  ${{ env.PROJECT_ID }}
+        location: ${{ env.GKE_ZONE }}
         namespace: next-destiny

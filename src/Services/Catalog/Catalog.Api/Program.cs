@@ -4,6 +4,7 @@ using NextDestiny.Core.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Console.WriteLine(builder.Configuration["ElasticApm:ServiceName"]);
 builder.AddObservability("catalog-api");
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

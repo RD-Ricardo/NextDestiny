@@ -18,7 +18,7 @@ env:
   GKE_ZONE: us-central1-c
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Exibir variável

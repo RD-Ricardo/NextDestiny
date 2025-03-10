@@ -6,11 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# env:
-#   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-#   GKE_CLUSTER: next-destiny-dev
-#   GKE_ZONE: us-central1-c
-
 jobs:
   deploy:
     name: deploy-catalog 
@@ -19,5 +14,4 @@ jobs:
     with:
       dockerfille: src/Services/Catalog/Catalog.Api/Dockerfile
       tags: rdricardo/next-destiny:catalog-${{ github.sha }}
-      set-image-k8s:  kubectl set image deployment/catalog-api-deployment catalog-api=rdricardo/next-destiny:${{ github.sha }}
-                      kubectl rollout restart deployment/catalog-api-deployment
+      deployment-name: catalog-api-deployment

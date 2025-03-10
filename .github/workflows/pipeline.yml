@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  deploy-catalog:
+  catalog:
     uses: ./.github/workflows/build-deploy.yml
     secrets: inherit
     with:
@@ -16,7 +16,7 @@ jobs:
       deployment-name: catalog-api-deployment
       label-name: catalog-api
   
-  deploy-order:
+  order:
     uses: ./.github/workflows/build-deploy.yml
     secrets: inherit
     with:
@@ -24,3 +24,39 @@ jobs:
       tags: rdricardo/next-destiny:order-${{ github.sha }}
       deployment-name: order-api-deployment
       label-name: order-api
+  
+  flight-worker:
+    uses: ./.github/workflows/build-deploy.yml
+    secrets: inherit
+    with:
+      dockerfille: src/Services/Flight/Flight.Worker/Dockerfile
+      tags: rdricardo/next-destiny:flight-worker-${{ github.sha }}
+      deployment-name: flight-worker-deployment
+      label-name: flight-worker
+  
+  flight-cancellation-worker:
+    uses: ./.github/workflows/build-deploy.yml
+    secrets: inherit
+    with:
+      dockerfille: src/Services/Flight/Flight.Cancellation.Worker/Dockerfile
+      tags: rdricardo/next-destiny:flight-cancellation-worker-${{ github.sha }}
+      deployment-name: flight-cancellation-worker-deployment
+      label-name: flight-cancellation-worker
+
+  hotel-worker:
+    uses: ./.github/workflows/build-deploy.yml
+    secrets: inherit
+    with:
+      dockerfille: src/Services/Hotel/Hotel.Worker/Dockerfile
+      tags: rdricardo/next-destiny:hotel-worker-${{ github.sha }}
+      deployment-name: hotel-worker-deployment
+      label-name: hotel-worker
+  
+  hotel-cancellation-worker:
+    uses: ./.github/workflows/build-deploy.yml
+    secrets: inherit
+    with:
+      dockerfille: src/Services/Hotel/Hotel.Cancellation.Worker/Dockerfile
+      tags: rdricardo/next-destiny:hotel-cancellation-worker-${{ github.sha }}
+      deployment-name: hotel-cancellation-worker-deployment
+      label-name: hotel-cancellation-worker

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: payment-worker
-        image: rdricardo/next-destiny:payment-worker
+        image: rdricardo/next-destiny:payment-latest
 
         ports:
         - containerPort: 8080

@@ -10,7 +10,7 @@ COPY ["src/Services/Payment/Payment.Worker/Payment.Worker.csproj", "Services/Pay
 COPY ["src/Building blocks/NextDestiny.Core/NextDestiny.Core.csproj", "Building blocks/NextDestiny.Core/"]
 COPY ["src/Services/Payment/Payment.Application/Payment.Application.csproj", "Services/Payment/Payment.Application/"]
 COPY ["src/Services/Payment/Payment.Domain/Payment.Domain.csproj", "Services/Payment/Payment.Domain/"]
-COPY ["src/Services/Payment/Payment.Infastructure/Payment.Infastructure.csproj", "Services/Payment/Payment.Infastructure/"]
+COPY ["src/Services/Payment/Payment.Infrastructure/Payment.Infrastructure.csproj", "Services/Payment/Payment.Infrastructure/"]
 
 RUN dotnet restore "Services/Payment/Payment.Worker/Payment.Worker.csproj"
 COPY src/ .

@@ -46,12 +46,6 @@ jobs:
         credentials_json: ${{ secrets.GKE_SA_KEY }}
         project_id: ${{ env.PROJECT_ID }}
 
-    - name: Set up GKE credentials
-      uses: google-github-actions/get-gke-credentials@v0
-      with:
-        cluster_name: ${{ env.GKE_CLUSTER }}
-        location: ${{ env.GKE_ZONE }}
-
     - name: Get GKE Credentials
       uses: google-github-actions/get-gke-credentials@v2.3.3
       with:
@@ -61,5 +55,5 @@ jobs:
         namespace: next-destiny
 
     - name: Set image in Kubernetes Deployment
-      run: ${{ github.event.inputs.set-image-k8s }}
+      run: "| ${{ github.event.inputs.set-image-k8s }}"
         

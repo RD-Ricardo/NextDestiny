@@ -60,3 +60,12 @@ jobs:
       tags: rdricardo/next-destiny:hotel-cancellation-worker-${{ github.sha }}
       deployment-name: hotel-cancellation-worker-deployment
       label-name: hotel-cancellation-worker
+
+  payment-worker:
+    uses: ./.github/workflows/build-deploy.yml
+    secrets: inherit
+    with:
+      dockerfille: src/Services/Payment/Payment.Worker/Dockerfile
+      tags: rdricardo/next-destiny:payment-worker-${{ github.sha }}
+      deployment-name: payment-worker-deployment
+      label-name: payment-worker

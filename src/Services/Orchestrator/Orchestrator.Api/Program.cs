@@ -1,5 +1,6 @@
 using MassTransit;
 using NextDestiny.Core.SecretManager;
+using NextDestiny.Core.WebApi.Extensions;
 using Orchestrator.Api.Hubs;
 using Orchestrator.Api.Saga;
 using Orchestrator.Api.Service;
@@ -7,6 +8,7 @@ using Orchestrator.Api.Service;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddSecretManager();
+builder.AddObservability("orchestrator-api");
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

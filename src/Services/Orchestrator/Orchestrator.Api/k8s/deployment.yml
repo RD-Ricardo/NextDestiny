@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator-api-deployment
+  labels:
+    app: orchestrator-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orchestrator-api
+  template:
+    metadata:
+      labels:
+        app: orchestrator-api
+    spec:
+      containers:
+      - name: orchestrator-api
+        image: rdricardo/next-destiny:orchestrator-api
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        - name: ASPNETCORE_URLS
+          value: "http://+:8080"
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: awssm-secret
+              key: access-key
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: awssm-secret
+              key: secret-access-key
+        # resources:
+        #   requests:
+        #     memory: "64Mi"
+        #     cpu: "250m"
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "500m"
+      imagePullSecrets:
+        - name: docker-secrets
+

@@ -69,3 +69,12 @@ jobs:
       tags: rdricardo/next-destiny:payment-worker-${{ github.sha }}
       deployment-name: payment-worker-deployment
       label-name: payment-worker
+
+  orchestrator:
+    uses: ./.github/workflows/build-deploy.yml
+    secrets: inherit
+    with:
+      dockerfille: src/Services/Orchestrator/Orchestrator.Api/Dockerfile
+      tags: rdricardo/next-destiny:orchestrator-${{ github.sha }}
+      deployment-name: orchestrator-api-deployment
+      label-name: orchestrator-api

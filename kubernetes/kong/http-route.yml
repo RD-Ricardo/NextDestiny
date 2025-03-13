@@ -1,0 +1,37 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: next-desitny-route
+  annotations:
+    konghq.com/strip-path: 'true'
+    konghq.com/websocket: "true"
+spec:
+  parentRefs:
+  - name: kong
+  hostnames:
+  - api-nextdestiny.rdsolutions.digital
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /catalog
+    backendRefs:
+    - name: catalog-api-service
+      kind: Service
+      port: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /order
+    backendRefs:
+    - name: order-api-service
+      kind: Service
+      port: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /orchestrator
+    backendRefs:
+    - name: orchestrator-api-service
+      kind: Service
+      port: 80
